@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sắp Xếp Câu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sortable-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .sortable-list li {
+            background-color: #eee;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .correct {
+            background-color: #8aff8a;
+        }
+
+        #nextButton,
+        #checkAnswerButton {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        #correctList {
+            margin-top: 20px;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Sắp Xếp Câu</h1>
+        <ul id="sortable-list" class="sortable-list">
+            <!-- Các câu sẽ được thêm vào đây bằng JavaScript -->
+        </ul>
+        <button id="checkAnswerButton" onclick="checkAnswer()">Kiểm Tra Đáp Án</button>
+        <button id="nextButton" onclick="showNextCau()">Next</button>
+        <div id="correctList"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let cauData = [
+
+            
+            ["when", "he soon", "he almost", "the", "this"],
+                ["the first", "the next", "then", "in the", "you can"],
+                ["dickens for…", "Difficultes…", "Keeping..", "The influence..", "Dickens early", "Tryling",
+                    "Bring.."
+                ],
+                ["On..", "Runners must..", "Todo this..", "In return..", "please put this"],
+                ["alarm", "exit", "through", "bottom stair", "outside"],
+                ["the easiest way", "result of", "Origins of", "A need for", "Not in it", "Generations…",
+                    "Earning"
+                ],
+                ["they left", "hightschool", "good at", "at one of theses", "famous actor"],
+                ["all you need is", "an old potato", "this colour", "cau con lai", "...every week"],
+                ["physically", "demanding", "social cycle", "boots memory", "routines",
+                    "other people's feeling", "develop sense of wellbeing"
+                ],
+                ["In your account","When do this","Singly","Once","After"],
+                ["They", "This","As","Fortunately","There fore"],
+                ["The customer","Coffee","a habit","Problems","A ne?","Health ride","Ancient"],
+
+                // ---------- Phan Doc-----------------------
+
+                // Luu y
+                ["6:30", "Check map", "Follow map", "Back office", "When"],
+                ["When", "Staff", "Inside", "Main hall", "Finish"],
+                ["Factors", "Situation", "Success", "Winner", "Way", "Design", "Achieve"],
+
+                ["First", "When", "Also", "Bring", "The"],
+                ["When", "This", "Please", "Before", "The"],
+                ["Makiing thing last Longer", "A Temporary", "The reson of secrecy",
+                    "Still relevant to Our time", "The difficulty", "Reason te reach", "Important lessons"
+                ],
+
+                // ----------- Phan Nghe -----------------------
+                ["After","While Singning","While Study","To Relax"],
+                ["Booking out", "People can't"],
+                ["They both make reference","They meaning of their work"],
+
+                ["Social activity wasn't good", "With childen","As part of their job","Alone"],
+                ["Standard of Service","They need to make OR Speed and Price"],
+                ["They are difficult to relate to", "It lacks orinality"],
+
+
+            ];
+
+            let cauDataA = [
+
+
+            ["when", "he soon", "he almost", "the", "this"],
+                ["the first", "the next", "then", "in the", "you can"],
+                ["dickens for…", "Difficultes…", "Keeping..", "The influence..", "Dickens early", "Tryling",
+                    "Bring.."
+                ],
+                ["On..", "Runners must..", "Todo this..", "In return..", "please put this"],
+                ["alarm", "exit", "through", "bottom stair", "outside"],
+                ["the easiest way", "result of", "Origins of", "A need for", "Not in it", "Generations…",
+                    "Earning"
+                ],
+                ["they left", "hightschool", "good at", "at one of theses", "famous actor"],
+                ["all you need is", "an old potato", "this colour", "cau con lai", "...every week"],
+                ["physically", "demanding", "social cycle", "boots memory", "routines",
+                    "other people's feeling", "develop sense of wellbeing"
+                ],
+                ["In your account","When do this","Singly","Once","After"],
+                ["They", "This","As","Fortunately","There fore"],
+                ["The customer","Coffee","a habit","Problems","A ne?","Health ride","Ancient"],
+
+
+                ["6:30", "Check map", "Follow map", "Back office", "When"],
+                ["When", "Staff", "Inside", "Main hall", "Finish"],
+                ["Factors", "Situation", "Success", "Winner", "Way", "Design", "Achieve"],
+
+                ["First", "When", "Also", "Bring", "The"],
+                ["When", "This", "Please", "Before", "The"],
+                ["Makiing thing last Longer", "A Temporary", "The reson of secrecy",
+                    "Still relevant to Our time", "The difficulty", "Reason te reach", "Important lessons"
+                ],
+
+                // ----------- Phan Nghe -----------------------
+                ["After","While Singning","While Study","To Relax"],
+                ["Booking out", "People can't"],
+                ["They both make reference","They meaning of their work"],
+
+                ["Social activity wasn't good", "With childen","As part of their job","Alone"],
+                ["Standard of Service","They need to make OR Speed and Price"],
+                ["They are difficult to relate to", "It lacks orinality"],
+
+            ];
+
+            let currentCauIndex = 0;
+            let correctAnswers = [];
+            let isAnswerChecked = false;
+
+            // Hiển thị câu đầu tiên
+            displayCau();
+
+            // Sắp xếp thứ tự câu bằng jQuery UI
+            $("#sortable-list").sortable({
+                update: function (event, ui) {
+                    // Khi thứ tự được cập nhật, hiển thị nút "Kiểm Tra Đáp Án"
+                    showCheckAnswerButton();
+                }
+            });
+
+            // Hàm hiển thị câu
+            function displayCau() {
+                // Sắp xếp thứ tự ngẫu nhiên cho câu hiện tại
+                cauData[currentCauIndex] = shuffleArray(cauData[currentCauIndex]);
+
+                const $sortableList = $("#sortable-list");
+                $sortableList.empty();
+                cauData[currentCauIndex].forEach((word, index) => {
+                    $sortableList.append(
+                        `<li id="word${index + 1}" class="ui-state-default">${word}</li>`);
+                });
+            }
+
+            // Hàm hiển thị nút "Kiểm Tra Đáp Án"
+            function showCheckAnswerButton() {
+                if (!isAnswerChecked) {
+                    const checkAnswerButton = document.getElementById("checkAnswerButton");
+                    checkAnswerButton.style.display = "block";
+                }
+            }
+
+            // Hàm kiểm tra đáp án
+            window.checkAnswer = function () {
+                const $sortableListItems = $("#sortable-list li");
+                const sortedWords = $sortableListItems.map(function () {
+                    return $(this).text();
+                }).get();
+
+                // So sánh thứ tự hiện tại với thứ tự đúng
+                const isCorrect = checkArrayEquality(sortedWords, cauData[currentCauIndex]);
+
+                // Lưu chỉ số của câu đúng
+                if (isCorrect) {
+                    correctAnswers.push(currentCauIndex);
+                }
+
+                // Hiển thị đáp án bên dưới câu trả lời
+                const correctList = document.getElementById("correctList");
+                correctList.innerHTML = `<p>Đáp án đúng:</p><p>${cauDataA[currentCauIndex].join(", ")}</p>`;
+                correctList.style.display = "block";
+
+                // Ẩn nút "Kiểm Tra Đáp Án" và hiển thị nút "Next"
+                document.getElementById("checkAnswerButton").style.display = "none";
+                document.getElementById("nextButton").style.display = "block";
+
+                // Đánh dấu là đã kiểm tra đáp án
+                isAnswerChecked = true;
+            };
+
+            // Hàm chuyển đến câu tiếp theo
+            window.showNextCau = function () {
+                // Ẩn nút "Next" và tăng chỉ số câu
+                document.getElementById("nextButton").style.display = "none";
+                currentCauIndex++;
+
+                // Nếu đã hiển thị hết câu, ẩn nút "Next" và hiển thị danh sách câu đúng
+                if (currentCauIndex === cauData.length) {
+                    document.getElementById("nextButton").style.display = "none";
+                    displayCorrectList();
+                } else {
+                    // Hiển thị câu tiếp theo và đặt lại trạng thái kiểm tra đáp án
+                    displayCau();
+                    isAnswerChecked = false;
+                }
+            };
+
+            // Hàm trộn mảng
+            function shuffleArray(array) {
+                return array.sort(() => Math.random() - 0.5);
+            }
+
+            // Hàm kiểm tra sự bằng nhau của hai mảng
+            function checkArrayEquality(arr1, arr2) {
+                return JSON.stringify(arr1) === JSON.stringify(arr2);
+            }
+
+            // Hàm hiển thị danh sách câu đúng
+            function displayCorrectList() {
+                const correctList = document.getElementById("correctList");
+                correctList.innerHTML = `<p>Danh sách câu đúng:</p><ul>`;
+                correctAnswers.forEach((index, listIndex) => {
+                    const sortedCauData = cauData[currentCauIndex]
+                        .slice(); // Sắp xếp thứ tự đúng của câu
+                    correctList.innerHTML += `<li>${listIndex + 1}. ${sortedCauData.join(", ")}</li>`;
+                });
+                correctList.innerHTML += `</ul>`;
+                correctList.style.display = "block";
+            }
+        });
+    </script>
+</body>
+
+</html>
